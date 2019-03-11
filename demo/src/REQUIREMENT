@@ -1,0 +1,27 @@
+Demo APP: Please create a demo application in React JS 
+and create the following features:---
+
+  1  Signup feature with all validation(first name, last name, email,
+   username, password, confirm password).
+
+  2  Login with username & password.
+
+  3  Update Profile: After login, a user can update their 
+    information from here.
+
+  4  Post Listing: A logged user can see the listing of all posts.
+
+  5  Create Post: A user can create a post from here. 
+    There will be 3 inputs here Title, Description and Status.
+
+  6  Edit Post: A user can edit only self-created posts.
+
+  7  Delete Post: A user can delete only self-created posts.
+  
+  8  View a post: A user can view a post over a separate page.
+
+Please refer the attached document for the APIs.
+
+Please use the Reactstrap for the UI components: https://reactstrap.github.io/components/buttons/
+
+Please use the Redux form for form validation: https://redux-form.com/8.1.0/docs/gettingstarted.md/
