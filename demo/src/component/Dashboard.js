@@ -36,13 +36,12 @@ class Dashboard extends React.Component {
         if (sentence !== '') {
             var result = sentence;
             var resultArray = result.split(' ');
-            if (resultArray.length > 10) {
-                resultArray = resultArray.slice(0, 10);
+            if (resultArray.length > 16) {
+                resultArray = resultArray.slice(0, 16);
                 result = resultArray.join(' ') + '…';
             }
             return result;
         }
-
     }
 
     renderPopup = (id) => {
@@ -93,11 +92,12 @@ class Dashboard extends React.Component {
     }
 
     deletePost = () => {
+        this.refs.delbtn.setAttribute("disabled", "disabled");
         this.props.deletePost(this.state.postid, (res) => {
             
             if (res.status === 200) {
                 this.setState({ popupState: false });
-                toastr.warning("delete Successfully")
+                toastr.warning("Waiting For Deleting Post","Deleting...")
                 setTimeout(function(){ window.location.reload() }, 3000);
                 
                     
@@ -122,7 +122,7 @@ class Dashboard extends React.Component {
                 <Modal open={popupState} center showCloseIcon={false} >
                     <h2>Confirm to delete this post?</h2>
                     <button className='ui button' onClick={this.cancelDelete}>CANCEL</button>
-                    <button className='ui negative button' onClick={this.deletePost}>DELETE</button>
+                    <button ref="delbtn" className='ui negative button' onClick={this.deletePost}>DELETE</button>
                 </Modal>
             </div>
         );

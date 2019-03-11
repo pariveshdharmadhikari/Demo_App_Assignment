@@ -29,6 +29,7 @@ class Form extends React.Component {
     }
 
     onSubmit = (formValues) => {
+        this.refs.btn.setAttribute("disabled", "disabled");
         this.props.onSubmit(formValues);
     }
 
@@ -41,7 +42,7 @@ class Form extends React.Component {
                 <Field name="username" type="text" component={this.renderInput} label="UserName" />
                 <Field name="password" type="password" component={this.renderInput} label="Password" />
                 <Field name="ConfirmPassword" type="password" component={this.renderInput} label="ConfirmPassword" />
-                <button className="ui button primary">Submit</button>
+                <button ref='btn' className="ui button primary">Submit</button>
             </form>
         );
     }

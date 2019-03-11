@@ -15,7 +15,7 @@ class CreatePost extends React.Component {
         </div>
     )
 
-    renderInput = ({ input, label, type,maxLength, meta: { touched, error } }) => (
+    renderInput = ({ input, label, type, maxLength, meta: { touched, error } }) => (
         <div>
             <label>{label}</label>
             <div>
@@ -26,23 +26,30 @@ class CreatePost extends React.Component {
     )
 
     onSubmit = (values) => {
+        this.refs.btn.setAttribute("disabled", "disabled");
         this.props.onSubmit(values);
     }
-    
-    status = [ 'publish', 'future', 'draft', 'pending', 'private', 'private' ]
 
-    renderDropdownList = ({ input, data, valueField, textField }) =>
-    <div>    
-        <DropdownList {...input}
-           data={data}
-            valueField={valueField}
-            textField={textField}
-            onChange={input.onChange} 
-            defaultValue={input.name}
+    status = ['publish', 'future', 'draft', 'pending', 'private', 'private']
+
+    renderDropdownList = ({ input, data, valueField, textField }) =>{
+        return(
+            <div>
+            <DropdownList {...input}
+                data={data}
+                valueField={valueField}
+                textField={textField}
+                onChange={input.onChange}
+                defaultValue={input.name}
             /></div>
+        );
+    }
+        
+
+
 
     render() {
-        
+
         return (
             <div>
                 <h2 style={{ textAlign: 'center' }}>Create Post</h2>
@@ -76,9 +83,9 @@ class CreatePost extends React.Component {
                             <button className='ui secondary button' type="button" disabled={this.props.pristine || this.props.submitting} onClick={this.props.reset}>
                                 Clear Values
                     </button>
-                            <button className='ui primary button' type="submit" disabled={this.props.submitting}>
+                            <button name='submitbutton' ref='btn' className='ui primary button' type="submit" disabled={this.props.submitting}>
                                 Submit
-                    </button>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -105,8 +112,8 @@ const validate = values => {
 export default reduxForm({
     form: 'syncValidation', // a unique identifier for this form
     validate, // <--- validation function given to redux-form
-    initialValues:{
-    status:'publish'
+    initialValues: {
+        status: 'publish'
     }
 })(CreatePost)
 

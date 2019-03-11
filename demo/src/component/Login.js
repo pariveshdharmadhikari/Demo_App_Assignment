@@ -38,6 +38,7 @@ class Login extends React.Component {
 
 
     onSubmit = (formValues) => {
+        this.refs.btn.setAttribute("disabled", "disabled");
         this.props.login(formValues, (res) => {
             if (res.status === 200) {
                 toastr.success(`Welcome ${res.data.user_display_name}`, 'Login Successfully');
@@ -61,7 +62,7 @@ class Login extends React.Component {
                 <form className="ui form error formmargin " onSubmit={this.props.handleSubmit(this.onSubmit)}>
                     <Field name="username" component={this.renderInput} label="Username" maxLength='20' />
                     <Field name="password" type='password' component={this.renderInput} label="Password" maxLength='20' />
-                    <button className="ui button primary " style={{ alignContent: 'right' }}>Login</button> 
+                    <button ref='btn' className="ui button primary " style={{ alignContent: 'right' }}>Login</button> 
                     <Link to='/Signup'><button className="ui button">Create Account</button></Link>
                 </form>
             </div>

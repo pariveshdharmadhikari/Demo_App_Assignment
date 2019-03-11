@@ -2,14 +2,11 @@ import React from 'react';
 import Form from './Form';
 import {updateUserInfo} from '../action'
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 
 class EditProfile extends React.Component{
     
-    componentWillMount(){
-        
-    }
-
-    onSubmit=()=>{
+onSubmit=()=>{
         this.props.updateUserInfo(localStorage.getItem('Userid'),(res)=>{
             console.log(res,'<<======= willmount of editprofile');
         });
@@ -18,7 +15,12 @@ class EditProfile extends React.Component{
     render(){
         return(
             <div>
-                <h2 style={{ textAlign: 'center' }}>Edit Profile</h2>
+                <div className=" ui secondary pointing menu" >
+                    <div className="right menu" >
+                        <Link to="/Dashboard" className="item" >Back to DashBoard</Link>
+                    </div>
+                </div>
+                <h3 style={{ textAlign: 'center' }}>Edit Profile</h3>
                 <Form onSubmit={this.onSubmit}/>
             </div>
         );

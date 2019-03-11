@@ -14,6 +14,7 @@ class CreatePost extends React.Component {
             console.log(res);
             history.push('/Dashboard');
             toastr.success("Post Added Successfully")
+            formvalues ={}
         });
 
 
