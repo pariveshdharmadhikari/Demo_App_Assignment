@@ -70,7 +70,7 @@ class Dashboard extends React.Component {
         const { popupState } = this.state;
         return (
             <div>
-                <Modal open={popupState} center showCloseIcon={false} >
+                <Modal open={popupState} onClose={()=>{}} center showCloseIcon={false} >
                     <h2>Confirm to delete this post?</h2>
                     <button className='ui button' onClick={this.cancelPopup}>CANCEL</button>
                     <button ref="delbtn" className='ui negative button' onClick={this.deletePost}>DELETE</button>
@@ -91,7 +91,7 @@ class Dashboard extends React.Component {
         const filteredcontent = this.strip_html_tags(content.rendered);
         return (
             <div>
-                <Modal open={detailPopupState} center showCloseIcon={false} >
+                <Modal open={detailPopupState} onClose={()=>{}} center showCloseIcon={false} >
                     <h2>Details...</h2>
                     <hr></hr>
                     <div className='ui mmodal' >
