@@ -10,6 +10,11 @@
     margin-top: 2px;
   }  
 
+  .ontitleclick{
+    width:120px;
+    cursor: pointer;
+  }
+
   .initials {
     
     /* 25% of parent */

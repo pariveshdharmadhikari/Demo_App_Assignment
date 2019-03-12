@@ -1,12 +1,12 @@
-
 import API from '../apis/UsersAPI'
 
-export const createUser = (formvalues, callBackResponse) => (dispatch) => {
+//constant header for api which is used in all api calling.
+const headers = {
+    'Content-Type': 'application/json',
+}
 
-    var headers = {
-        'Content-Type': 'application/json',
-    }
-    console.log(formvalues);
+//action creator for registration of user.
+export const createUser = (formvalues, callBackResponse) => (dispatch) => { 
     const response = API.post('/wp/v2/users/register', formvalues, { headers: headers });
     response.then((res) => {
         callBackResponse(res);
@@ -18,15 +18,10 @@ export const createUser = (formvalues, callBackResponse) => (dispatch) => {
         type: 'CREATE_USER',
         payload: response
     });
-
 }
 
-export const login = (formvalues, callBackResponse) => (dispatch) => {
-    var headers = {
-        'Content-Type': 'application/json',
-    }
-    console.log(formvalues);
-    // http://183.182.84.84/restapi/wp-json/jwt-auth/v1/token
+//action creator for valid Login of user.
+export const login = (formvalues, callBackResponse) => () => {
     const response = API.post('/jwt-auth/v1/token', formvalues, { headers: headers });
     response.then((res) => {
         callBackResponse(res);
@@ -36,35 +31,18 @@ export const login = (formvalues, callBackResponse) => (dispatch) => {
     });
 }
 
-export const fetchPost= (id, callBackResponse) => async (dispatch) => {
-    var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
+//action creator to fetch single post for edit the post by authorized user.
+//Authorization is checked by TOKEN.
+export const fetchPost= (id, callBackResponse) => async () => {
+    headers['Authorization']=`Bearer ${localStorage.getItem("token")}`
     const response = await API.get(`/wp/v2/posts/${id}`, { headers: headers });
-    console.log(response,"callbackresponse for post");
     callBackResponse(response.data);
 }
-
-export const updateUserInfo = (id, callBackResponse) => async (dispatch) => {
-    var headers = {
-        'Content-Type': 'application/json',
-    }
-    const response = await API.put(`/wp/v2/users/${id}`, { headers: headers });
-    console.log(response);
-    callBackResponse(response);
-    dispatch({
-        type: 'CREATE_USER',
-        payload: response
-    });
-}
-
+ 
+//action creator to create new post by authorized user.
+//Authorization is checked by TOKEN.
 export const createPost = (formvalues, callBackResponse) => () => {
-    console.log(localStorage.getItem("token"));
-    var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
+    headers['Authorization']=`Bearer ${localStorage.getItem("token")}`;
     const response = API.post('/wp/v2/posts', formvalues, { headers: headers });
     response.then((res) => {
         callBackResponse(res);
@@ -72,20 +50,14 @@ export const createPost = (formvalues, callBackResponse) => () => {
     response.catch((error) => {
         callBackResponse(error.response);
     });
-    // dispatch({
-    //     type: 'CREATE_POST',
-    //     payload: response
-    // });
 }
 
+//action creator to fetch all post list.
+//Authorization is checked by TOKEN.
 export const fetchPosts = (callBackResponse) => (dispatch) => {
-    var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
+    headers['Authorization']=`Bearer ${localStorage.getItem("token")}`;
     const response = API.get('/wp/v2/posts', { headers: headers });
     response.then((res) => {
-        console.log(res, 'jklsdfhsdjfhsdjfh');
         callBackResponse(res);
         dispatch({
             type: 'FETCH_POST',
@@ -93,17 +65,14 @@ export const fetchPosts = (callBackResponse) => (dispatch) => {
         });
     });
     response.catch((error) => {
-        console.log(error.response);
+        callBackResponse(error.response);
     });
-
 }
 
+//action creator to delete a post by authorized user.
+//Authorization is checked by TOKEN.
 export const deletePost = (id, callBackResponse) => () => {
-    console.log(localStorage.getItem("token"));
-    var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
+    headers['Authorization']=`Bearer ${localStorage.getItem("token")}`;
     const response = API.delete(`/wp/v2/posts/${id}`, { headers: headers });
     response.then((res) => {
         callBackResponse(res);
@@ -113,12 +82,10 @@ export const deletePost = (id, callBackResponse) => () => {
     });
 }
 
+//action creator for updating the fetched post for editing purpose by authorized user.
+//Authorization is checked by TOKEN.
 export const updatePost = (id,formvalues,callBackResponse) => () => {
-    console.log(localStorage.getItem("token"));
-    var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
+    headers['Authorization']=`Bearer ${localStorage.getItem("token")}`;
     const response = API.put(`/wp/v2/posts/${id}`,formvalues, { headers: headers });
     response.then((res) => {
         callBackResponse(res);

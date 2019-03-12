@@ -1,15 +1,14 @@
 import React from 'react';
 import Form from './Form';
-import {updateUserInfo} from '../action'
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+
+//Currently this component in pending Status because of API problem.
 
 class EditProfile extends React.Component{
     
 onSubmit=()=>{
-        this.props.updateUserInfo(localStorage.getItem('Userid'),(res)=>{
-            console.log(res,'<<======= willmount of editprofile');
-        });
+        
     }
     
     render(){
@@ -27,4 +26,4 @@ onSubmit=()=>{
     }
 }
 
-export default connect(null,{updateUserInfo})(EditProfile);
+export default connect(null)(EditProfile);

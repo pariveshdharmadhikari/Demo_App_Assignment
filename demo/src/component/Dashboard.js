@@ -5,25 +5,41 @@ import { fetchPosts, deletePost } from '../action';
 import { connect } from 'react-redux';
 import { toastr } from 'react-redux-toastr';
 import Modal from 'react-responsive-modal';
+import '../css/Loader.css';
 
 class Dashboard extends React.Component {
-    state = { data: undefined, popupState: false, postid: '' }
+    state = {
+        data: undefined,
+        popupState: false,
+        postid: '',
+        detailPopupState: false,
+        selectedpost: {}
+    }
 
+    //used to initiate the dashboard with our POST lists
+    //It uses fetchPosts Action Creator.
     componentWillMount() {
         if (localStorage.getItem('IsLogedIn') === 'true') {
-
             this.props.fetchPosts((res) => {
-                this.setState({ data: res.data })
+                if (res.status === 200) {
+                    this.setState({ data: res.data })
+                }
+                else {
+                    toastr.error("Something went wrong");
+                }
             });
         }
     }
 
+    //used to maintain login-logout session. with help of localstorage.
     onLogout = () => {
         localStorage.removeItem('token');
         localStorage.setItem("IsLogedIn", false);
         toastr.info('Logout Successfully');
     }
 
+    //This method taked a paragraph as a argument.
+    //Return string with removing html tags. 
     strip_html_tags(str) {
         if ((str === null) || (str === ''))
             return '';
@@ -32,35 +48,96 @@ class Dashboard extends React.Component {
         return str.replace(/<[^>]*>/g, '');
     }
 
+    //method return string with N number of words and then ...
     trimByWord(sentence) {
-        if (sentence !== '') {
-            var result = sentence;
-            var resultArray = result.split(' ');
-            if (resultArray.length > 16) {
-                resultArray = resultArray.slice(0, 16);
-                result = resultArray.join(' ') + '…';
-            }
-            return result;
+        var result = sentence;
+        var resultArray = result.split(' ');
+        if (resultArray.length > 12) {
+            resultArray = resultArray.slice(0, 12);
+            result = resultArray.join(' ') + '…';
         }
+        return result;
+
     }
 
-    renderPopup = (id) => {
+    //metthod used to show the deletePopup
+    renderDeletePopup = (id) => {
         this.setState({ popupState: true, postid: id });
     }
 
+    //delete Popup
+    deletePopup() {
+        const { popupState } = this.state;
+        return (
+            <div>
+                <Modal open={popupState} center showCloseIcon={false} >
+                    <h2>Confirm to delete this post?</h2>
+                    <button className='ui button' onClick={this.cancelPopup}>CANCEL</button>
+                    <button ref="delbtn" className='ui negative button' onClick={this.deletePost}>DELETE</button>
+                </Modal>
+            </div>
+        );
+    }
+
+    //method to show detail Popup
+    renderDetailPopup = (selectedpost) => {
+        this.setState({ detailPopupState: true, selectedpost: selectedpost });
+    }
+
+    //detail Popup
+    detailPopup() {
+        const { detailPopupState } = this.state;
+        const { title, content, status } = this.state.selectedpost;
+        const filteredcontent = this.strip_html_tags(content.rendered);
+        return (
+            <div>
+                <Modal open={detailPopupState} center showCloseIcon={false} >
+                    <h2>Details...</h2>
+                    <hr></hr>
+                    <div className='ui mmodal' >
+                        <div className="header">
+                            <strong>TITLE :- </strong>
+                            <span>{title.rendered}</span>
+                        </div>
+                        <hr></hr>
+                        <div className='content'>
+                            <strong>CONTENT :- </strong>
+                            <span>{filteredcontent}</span>
+                        </div>
+                        <hr></hr>
+                        <div className="content" >
+                            <strong>STATUS :- </strong>
+                            <span>{status}</span>
+                        </div>
+                    </div>
+                    <hr></hr>
+                    <button className='ui button' onClick={this.cancelPopup}>CANCEL</button>
+                </Modal>
+            </div>
+        );
+    }
+
+    //it hides the models.
+    cancelPopup = () => {
+        this.setState({ popupState: false, detailPopupState: false });
+    }
+
+    //It shows the EDIT & DELETE button if the post created by loged-in user.  
     renderbutton = (uid, id) => {
         const userid = localStorage.getItem('userid');
         if (uid.toString() === userid) {
             return (
                 <div className='right floated content'>
                     <Link to={`/EditPost/${id}`} ><button className='ui primary button' >Edit</button></Link>
-                    <button className='ui negative button' onClick={() => this.renderPopup(id)} >Delete</button>
+                    <button className='ui negative button' onClick={() => this.renderDeletePopup(id)} >Delete</button>
                 </div>
             );
         }
     }
 
+    //It show the list of all posts .
     renderlist = () => {
+        console.log(this.props.posts, 'renderlist')
         if (this.props.posts !== []) {
             const _this = this;
             return this.props.posts.map((post, index) => {
@@ -69,13 +146,13 @@ class Dashboard extends React.Component {
                     <div className='item' key={index}>
                         {_this.renderbutton(post.author, post.id)}
                         <i className='large middle aligned icon user' />
-                        <div className='content'>
-                            <div className='header' >
+                        <div className='content'  >
+                            <div className='header ontitleclick' onClick={() => this.renderDetailPopup(post)}>
                                 {post.title.rendered}
                             </div>
                             <div className='description'>
-
                                 {this.trimByWord(description)}
+
                             </div>
                         </div>
                     </div>
@@ -91,18 +168,16 @@ class Dashboard extends React.Component {
         }
     }
 
+    //It perform the functionality to delete the post
+    //It uses deletePost Action Creator.
     deletePost = () => {
         this.refs.delbtn.setAttribute("disabled", "disabled");
         this.props.deletePost(this.state.postid, (res) => {
-            
+
             if (res.status === 200) {
                 this.setState({ popupState: false });
-                toastr.warning("Waiting For Deleting Post","Deleting...")
-                setTimeout(function(){ window.location.reload() }, 3000);
-                
-                    
-                
-          
+                toastr.warning("Waiting For Deleting Post", "Deleting...")
+                setTimeout(function () { window.location.reload() }, 3000);
             }
             else {
                 this.setState({ popupState: false });
@@ -111,27 +186,10 @@ class Dashboard extends React.Component {
         })
     }
 
-    cancelDelete = () => {
-        this.setState({ popupState: false });
-    }
-
-    deletePopup() {
-        const { popupState } = this.state;
-        return (
-            <div>
-                <Modal open={popupState} center showCloseIcon={false} >
-                    <h2>Confirm to delete this post?</h2>
-                    <button className='ui button' onClick={this.cancelDelete}>CANCEL</button>
-                    <button ref="delbtn" className='ui negative button' onClick={this.deletePost}>DELETE</button>
-                </Modal>
-            </div>
-        );
-    }
-
+    //It Render the whole JSX including renderlist.
     renderDashBoard() {
         const name = localStorage.getItem("Username")
         const temp = (name.charAt(0)).toUpperCase();
-        console.log(localStorage.getItem("IsLogedIn"), 'renderdashboard');
         if (localStorage.getItem("IsLogedIn") === 'true') {
             return (
                 <div>
@@ -168,19 +226,19 @@ class Dashboard extends React.Component {
         }
     }
 
+    //Main render method
     render() {
-
         return (
             <div>
+                {this.state.detailPopupState && this.detailPopup()}
                 {this.state.popupState && this.deletePopup()}
                 {this.renderDashBoard()}
             </div>
-        )
+        );
     }
 }
 
 const mapStateToProps = (state) => {
-
     return { posts: state.posts }
 }
 

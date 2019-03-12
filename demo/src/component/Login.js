@@ -7,10 +7,11 @@ import history from '../History'
 import { toastr } from 'react-redux-toastr';
 import Header from './Header';
 class Login extends React.Component {
+    
     state = { flag: false }
 
-
-
+    //It Will invoke when validation mistake happens in form.
+    //It will return the JSX according to the validation error.
     renderError({ error, touched }) {
         if (touched && error) {
             return (
@@ -21,6 +22,7 @@ class Login extends React.Component {
         }
     }
 
+    //renderInput method returns the JSX for every Field Component.
     renderInput = ({ input, label, type, meta, maxLength }) => {
         return (
 
@@ -34,13 +36,11 @@ class Login extends React.Component {
         )
     }
 
-
-
-
+    //Invoke when user submit the Login form with username and password. 
     onSubmit = (formValues) => {
-        this.refs.btn.setAttribute("disabled", "disabled");
         this.props.login(formValues, (res) => {
             if (res.status === 200) {
+                this.refs.btn.setAttribute("disabled", "disabled");
                 toastr.success(`Welcome ${res.data.user_display_name}`, 'Login Successfully');
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem("IsLogedIn", true);
@@ -54,6 +54,7 @@ class Login extends React.Component {
         });
     }
 
+    //Main render method.
     render() {
         return (
             <div>
@@ -70,6 +71,7 @@ class Login extends React.Component {
     }
 }
 
+//perform validation on login form
 const validate = (formValues) => {
     const errors = {}
     if (!formValues.username) {

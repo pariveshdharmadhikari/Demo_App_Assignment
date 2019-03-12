@@ -7,10 +7,11 @@ import { toastr } from 'react-redux-toastr';
 import history from '../History';
 
 class SignupForm extends React.Component {
+    
     state={flag:true}
 
-    
-    
+    //onSubmit method will invoke when user submited form
+    //"createUser" action Creator calls from here and the page waiting for the response.
     onSubmit=(formValues)=>{
         formValues.role='author';
         this.props.createUser(formValues,(res)=>{
@@ -25,8 +26,8 @@ class SignupForm extends React.Component {
         }); 
     }
 
+    //main render method which call the "Form" component to render the registration form.
     render(){
-        
         return(<div>
             <Header />
             <h2 style={{textAlign:'center'}}>Signup</h2>
@@ -35,13 +36,7 @@ class SignupForm extends React.Component {
     }
 }
 
-const mapStateToProps=(state)=>{
-    return{
-        alldata:state.users
-    }
-}
-
-export default connect(mapStateToProps,{createUser})(SignupForm);
+export default connect(null,{createUser})(SignupForm);
 
 
 

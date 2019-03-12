@@ -8,8 +8,8 @@ import { toastr } from 'react-redux-toastr';
 
 class CreatePost extends React.Component {
 
+    //onSubmit Invoke when user submited the Create Post form.
     onSubmit = (formvalues) => {
-
         this.props.createPost(formvalues, (res) => {
             console.log(res);
             history.push('/Dashboard');
@@ -19,12 +19,15 @@ class CreatePost extends React.Component {
 
 
     }
+
+    //Perform the functionality of logout through LocalStorage
     onLogout = () => {
         localStorage.removeItem("IsLogedIn");
         localStorage.removeItem('Userid');
         this.setState({ flag: false })
     }
 
+    //Main render method which render the form from PostForm component.
     render() {
         if (localStorage.getItem("IsLogedIn")) {
             return (
@@ -33,7 +36,6 @@ class CreatePost extends React.Component {
                         <div className="right menu" >
                             <Link to="/Dashboard" className="item" >Back to DashBoard</Link>
                             <Link to="/" onClick={this.onLogout} className="item" >LogOut</Link>
-
                         </div>
                     </div>
                     <PostForm onSubmit={this.onSubmit} />

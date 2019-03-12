@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../css/Form.css'
 
-
+//This is function component which returns the header as JSX.
 const Header = () => {
     return (
         <div className=" ui secondary pointing menu" >
 
-            <div className="right menu" >
+            <div className="right menu effect" >
                 <Link to="/" className="item" >Login</Link>
                 <Link to="/Signup" className="item" >Signup</Link>
                 {/* <GoogleAuth /> */}

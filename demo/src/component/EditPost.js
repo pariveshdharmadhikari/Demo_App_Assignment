@@ -6,17 +6,22 @@ import _ from 'lodash'
 import { toastr } from 'react-redux-toastr';
 import history from '../History';
 import { Link } from 'react-router-dom';
-
-
+import '../css/Loader.css';
 
 class EditPost extends React.Component {
+
     state = { post: '' }
+
+    //use to  fetch initiate value from API of selected Post and set it to state.
+    //It uses fetchPost action creator.
     componentWillMount() {
         this.props.fetchPost(this.props.match.params.id, (res) => {
             this.setState({ post: res })
         })
     }
 
+    //Invoke when user submitted edited post.
+    //It uses updatePost action creator. 
     onSubmit = (formvalues) => {
         const { id } = this.props.match.params;
         this.props.updatePost(id, formvalues, (res) => {
@@ -28,8 +33,10 @@ class EditPost extends React.Component {
                 toastr.error('Something Went Wrong', "Please try again");
             }
         });
-
     }
+
+    //This method taked a paragraph as a argument.
+    //Return string with removing html tags. 
     strip_html_tags(str) {
         if ((str === null) || (str === ''))
             return '';
@@ -38,9 +45,9 @@ class EditPost extends React.Component {
         return str.replace(/<[^>]*>/g, '');
     }
 
+    //this will set initial value to the PostForm component.
     initiateForm = () => {
         const { post } = this.state;
-        console.log(post, "initiate");
         const content = this.strip_html_tags(post.content.rendered);
         const initialvalues = {
             "title": post.title.rendered,
@@ -62,8 +69,8 @@ class EditPost extends React.Component {
         )
     }
 
+    //main render method.
     render() {
-        console.log(localStorage.getItem('IsLogedIn'),'ikufghldsfkdsjds');
         if (localStorage.getItem('IsLogedIn')) {
             if (this.state.post !== '') {
                 return (
@@ -74,11 +81,7 @@ class EditPost extends React.Component {
             }
             else {
                 return (
-                    <div>
-                        <h2>
-                            Loading...
-                        </h2>
-                    </div>
+                    <div className="loader"></div>
                 )
             }
         }
@@ -89,13 +92,10 @@ class EditPost extends React.Component {
                 </div>
             );
         }
-
-
     }
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.posts, 'map state to props');
     return { post: state.posts }
 }
 
