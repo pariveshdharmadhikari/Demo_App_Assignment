@@ -11,7 +11,6 @@ class CreatePost extends React.Component {
     //onSubmit Invoke when user submited the Create Post form.
     onSubmit = (formvalues) => {
         this.props.createPost(formvalues, (res) => {
-            console.log(res);
             history.push('/Dashboard');
             toastr.success("Post Added Successfully")
             formvalues ={}

@@ -137,7 +137,6 @@ class Dashboard extends React.Component {
 
     //It show the list of all posts .
     renderlist = () => {
-        console.log(this.props.posts, 'renderlist')
         if (this.props.posts !== []) {
             const _this = this;
             return this.props.posts.map((post, index) => {
