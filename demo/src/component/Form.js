@@ -71,7 +71,9 @@ const validate = (formValues) => {
         errors.email = 'length must be less than 50'
     }
 
-    if (!/[^a-zA-Z0-9]/i.test(formValues.username)) {
+    if(!formValues.username){
+        errors.username = 'You must enter username'
+    }else if (!/[^a-zA-Z0-9]/i.test(formValues.username)) {
         errors.username = 'Only Alfanumeric value will aceepted (with one special character)'
     }else if(formValues.username.length<6){
         errors.username = 'Minimum length is 6 character'
