@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import _ from 'lodash'
 import { toastr } from 'react-redux-toastr';
 import history from '../History';
-import { Link } from 'react-router-dom';
 import '../css/Loader.css';
+import Header from './Header';
 
 class EditPost extends React.Component {
 
@@ -15,9 +15,11 @@ class EditPost extends React.Component {
     //use to  fetch initiate value from API of selected Post and set it to state.
     //It uses fetchPost action creator.
     componentWillMount() {
-        this.props.fetchPost(this.props.match.params.id, (res) => {
-            this.setState({ post: res })
-        })
+        if (localStorage.getItem('IsLogedIn')=== 'true'){
+            this.props.fetchPost(this.props.match.params.id, (res) => {
+                this.setState({ post: res })
+            })
+        }   
     }
 
     //Invoke when user submitted edited post.
@@ -56,11 +58,7 @@ class EditPost extends React.Component {
         };
         return (
             <div>
-                <div className=" ui secondary pointing menu" >
-                    <div className="right menu" >
-                        <Link to="/Dashboard" className="item" >Back to DashBoard</Link>
-                    </div>
-                </div>
+                <Header propName='Back'/>
                 <PostForm
                     initialValues={_.pick(initialvalues, 'title', 'content', 'status')}
                     onSubmit={this.onSubmit}
@@ -71,7 +69,8 @@ class EditPost extends React.Component {
 
     //main render method.
     render() {
-        if (localStorage.getItem('IsLogedIn')) {
+        console.log(localStorage.getItem('IsLogedIn'),'kdhsgfksfhgs')
+        if (localStorage.getItem('IsLogedIn')=== 'true') {
             if (this.state.post !== '') {
                 return (
                     <div>

@@ -1,11 +1,13 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Dashboard.css';
 import { fetchPosts, deletePost } from '../action';
 import { connect } from 'react-redux';
 import { toastr } from 'react-redux-toastr';
-import Modal from 'react-responsive-modal';
 import '../css/Loader.css';
+import DetailsPopup from './DetailsPopup';
+import DeletePopup from './DeletePopup';
+import Header from './Header'
 
 class Dashboard extends React.Component {
     state = {
@@ -31,13 +33,6 @@ class Dashboard extends React.Component {
         }
     }
 
-    //used to maintain login-logout session. with help of localstorage.
-    onLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.setItem("IsLogedIn", false);
-        toastr.info('Logout Successfully');
-    }
-
     //This method taked a paragraph as a argument.
     //Return string with removing html tags. 
     strip_html_tags(str) {
@@ -57,7 +52,11 @@ class Dashboard extends React.Component {
             result = resultArray.join(' ') + '…';
         }
         return result;
+    }
 
+    filterTitle(sentence){
+        var result = sentence.substr(0,15);
+        return result;
     }
 
     //metthod used to show the deletePopup
@@ -65,56 +64,9 @@ class Dashboard extends React.Component {
         this.setState({ popupState: true, postid: id });
     }
 
-    //delete Popup
-    deletePopup() {
-        const { popupState } = this.state;
-        return (
-            <div>
-                <Modal open={popupState} onClose={()=>{}} center showCloseIcon={false} >
-                    <h2>Confirm to delete this post?</h2>
-                    <button className='ui button' onClick={this.cancelPopup}>CANCEL</button>
-                    <button ref="delbtn" className='ui negative button' onClick={this.deletePost}>DELETE</button>
-                </Modal>
-            </div>
-        );
-    }
-
     //method to show detail Popup
     renderDetailPopup = (selectedpost) => {
         this.setState({ detailPopupState: true, selectedpost: selectedpost });
-    }
-
-    //detail Popup
-    detailPopup() {
-        const { detailPopupState } = this.state;
-        const { title, content, status } = this.state.selectedpost;
-        const filteredcontent = this.strip_html_tags(content.rendered);
-        return (
-            <div>
-                <Modal open={detailPopupState} onClose={()=>{}} center showCloseIcon={false} >
-                    <h2>Details...</h2>
-                    <hr></hr>
-                    <div className='ui mmodal' >
-                        <div className="header">
-                            <strong>TITLE :- </strong>
-                            <span>{title.rendered}</span>
-                        </div>
-                        <hr></hr>
-                        <div className='content'>
-                            <strong>CONTENT :- </strong>
-                            <span>{filteredcontent}</span>
-                        </div>
-                        <hr></hr>
-                        <div className="content" >
-                            <strong>STATUS :- </strong>
-                            <span>{status}</span>
-                        </div>
-                    </div>
-                    <hr></hr>
-                    <button className='ui button' onClick={this.cancelPopup}>CANCEL</button>
-                </Modal>
-            </div>
-        );
     }
 
     //it hides the models.
@@ -140,6 +92,7 @@ class Dashboard extends React.Component {
         if (this.props.posts !== []) {
             const _this = this;
             return this.props.posts.map((post, index) => {
+                const rendertitle=_this.filterTitle(post.title.rendered);
                 const description = _this.strip_html_tags(post.excerpt.rendered)
                 return (
                     <div className='item' key={index}>
@@ -147,7 +100,7 @@ class Dashboard extends React.Component {
                         <i className='large middle aligned icon user' />
                         <div className='content'  >
                             <div className='header ontitleclick' onClick={() => this.renderDetailPopup(post)}>
-                                {post.title.rendered}
+                                {rendertitle}
                             </div>
                             <div className='description'>
                                 {this.trimByWord(description)}
@@ -167,24 +120,6 @@ class Dashboard extends React.Component {
         }
     }
 
-    //It perform the functionality to delete the post
-    //It uses deletePost Action Creator.
-    deletePost = () => {
-        this.refs.delbtn.setAttribute("disabled", "disabled");
-        this.props.deletePost(this.state.postid, (res) => {
-
-            if (res.status === 200) {
-                this.setState({ popupState: false });
-                toastr.warning("Waiting For Deleting Post", "Deleting...")
-                setTimeout(function () { window.location.reload() }, 3000);
-            }
-            else {
-                this.setState({ popupState: false });
-                toastr.error("something went wrong");
-            }
-        })
-    }
-
     //It Render the whole JSX including renderlist.
     renderDashBoard() {
         const name = localStorage.getItem("Username")
@@ -192,16 +127,7 @@ class Dashboard extends React.Component {
         if (localStorage.getItem("IsLogedIn") === 'true') {
             return (
                 <div>
-                    <div className=" ui secondary pointing menu" >
-                        <div className="right menu" >
-                            <Link to="/EditProfile">
-                                <div className="avatar-circle" >
-                                    <span className="initials" ><div className='character' >{temp}</div></span>
-                                </div></Link>
-                            <Link to="/CreatePost" className="item" >Create Post</Link>
-                            <Link to="/" onClick={this.onLogout} className="item" >LogOut</Link>
-                        </div>
-                    </div>
+                    <Header propName='Dashboard' temp={temp} />
                     <div>
                         <h2 style={{ textAlign: 'center' }}>POST LIST</h2>
                         <div className='ui celled list' >
@@ -227,10 +153,22 @@ class Dashboard extends React.Component {
 
     //Main render method
     render() {
+        const { selectedpost, detailPopupState, popupState, postid } = this.state;
         return (
             <div>
-                {this.state.detailPopupState && this.detailPopup()}
-                {this.state.popupState && this.deletePopup()}
+                {this.state.detailPopupState && <DetailsPopup
+                    cancelPopup={this.cancelPopup}
+                    selectedpost={selectedpost}
+                    striptag={this.strip_html_tags}
+                    detailPopupState={detailPopupState}
+                />}
+
+                {this.state.popupState && <DeletePopup
+                    popupState={popupState}
+                    cancelPopup={this.cancelPopup}
+                    postid={postid}
+                />}
+
                 {this.renderDashBoard()}
             </div>
         );

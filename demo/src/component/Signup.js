@@ -12,10 +12,11 @@ class SignupForm extends React.Component {
 
     //onSubmit method will invoke when user submited form
     //"createUser" action Creator calls from here and the page waiting for the response.
-    onSubmit=(formValues)=>{
+    onSubmit=(formValues,ref)=>{
         formValues.role='author';
         this.props.createUser(formValues,(res)=>{
             if(res.status===200){
+                ref();
                 toastr.success(`Signup Successfully`);
                 history.push('/');
             }
@@ -29,7 +30,7 @@ class SignupForm extends React.Component {
     //main render method which call the "Form" component to render the registration form.
     render(){
         return(<div>
-            <Header />
+            <Header propName='Login'/>
             <h2 style={{textAlign:'center'}}>Signup</h2>
             <Form onSubmit={this.onSubmit}/>
         </div>);

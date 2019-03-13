@@ -7,7 +7,7 @@ import history from '../History'
 import { toastr } from 'react-redux-toastr';
 import Header from './Header';
 class Login extends React.Component {
-    
+
     state = { flag: false }
 
     //It Will invoke when validation mistake happens in form.
@@ -45,7 +45,7 @@ class Login extends React.Component {
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem("IsLogedIn", true);
                 localStorage.setItem("Username", res.data.user_display_name);
-                localStorage.setItem('userid',res.data.user_id);
+                localStorage.setItem('userid', res.data.user_id);
                 history.push('/Dashboard');
             }
             else {
@@ -56,18 +56,28 @@ class Login extends React.Component {
 
     //Main render method.
     render() {
-        return (
-            <div>
-                <Header />
-                <h2 style={{ textAlign: 'center' }}>Login</h2>
-                <form className="ui form error formmargin " onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                    <Field name="username" component={this.renderInput} label="Username" maxLength='20' />
-                    <Field name="password" type='password' component={this.renderInput} label="Password" maxLength='20' />
-                    <button ref='btn' className="ui button primary " style={{ alignContent: 'right' }}>Login</button> 
-                    <Link to='/Signup'><button className="ui button">Create Account</button></Link>
-                </form>
-            </div>
-        );
+        console.log(localStorage.getItem("IsLogedIn"))
+        if (localStorage.getItem("IsLogedIn") === 'false') {
+            return (
+                <div>
+                    <Header propName='Signup'/>
+                    <h2 style={{ textAlign: 'center' }}>Login</h2>
+                    <form className="ui form error formmargin " onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                        <Field name="username" component={this.renderInput} label="Username" maxLength='20' />
+                        <Field name="password" type='password' component={this.renderInput} label="Password" maxLength='20' />
+                        <button ref='btn' className="ui button primary " style={{ alignContent: 'right' }}>Login</button>
+                        <Link to='/Signup'><button className="ui button">Create Account</button></Link>
+                    </form>
+                </div>
+            );
+        } else {
+            history.push('/Dashboard');
+            return (
+                <div></div>
+            )
+
+        }
+
     }
 }
 

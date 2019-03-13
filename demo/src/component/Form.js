@@ -29,8 +29,11 @@ class Form extends React.Component {
 
     //onSubmit method invoke the callback onSubmit function.
     onSubmit = (formValues) => {
-        this.refs.btn.setAttribute("disabled", "disabled");
-        this.props.onSubmit(formValues);
+        const _this=this;
+        this.props.onSubmit(formValues,()=>{
+            _this.refs.btn.setAttribute("disabled", "disabled");
+        })
+            
     }
 
     //main render method.

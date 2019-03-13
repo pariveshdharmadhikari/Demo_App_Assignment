@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import history from '../History';
 import { toastr } from 'react-redux-toastr';
+import Header from './Header';
 
 class CreatePost extends React.Component {
 
@@ -15,8 +16,6 @@ class CreatePost extends React.Component {
             toastr.success("Post Added Successfully")
             formvalues ={}
         });
-
-
     }
 
     //Perform the functionality of logout through LocalStorage
@@ -28,15 +27,10 @@ class CreatePost extends React.Component {
 
     //Main render method which render the form from PostForm component.
     render() {
-        if (localStorage.getItem("IsLogedIn")) {
+        if (localStorage.getItem("IsLogedIn")==='true') {
             return (
                 <div>
-                    <div className=" ui secondary pointing menu" >
-                        <div className="right menu" >
-                            <Link to="/Dashboard" className="item" >Back to DashBoard</Link>
-                            <Link to="/" onClick={this.onLogout} className="item" >LogOut</Link>
-                        </div>
-                    </div>
+                    <Header propName='Back'/>
                     <PostForm onSubmit={this.onSubmit} />
                 </div>
             );
