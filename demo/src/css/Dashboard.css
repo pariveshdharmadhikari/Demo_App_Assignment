@@ -13,8 +13,6 @@
   .ontitleclick{
     color:rgb(0, 0, 150);
     width:200px;
-    cursor: pointer;
-    font-size: 15px;
   }
 
   .initials {

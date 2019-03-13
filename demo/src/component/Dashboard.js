@@ -97,11 +97,11 @@ class Dashboard extends React.Component {
                 const rendertitle=_this.filterTitle(post.title.rendered);
                 const description = _this.strip_html_tags(post.excerpt.rendered)
                 return (
-                    <div className='item formmargin' key={index}>
+                    <div className='item formmargin' onClick={() => this.renderDetailPopup(post)} key={index}>
                         {_this.renderbutton(post.author, post.id)}
                         <i className='large middle aligned icon user' />
                         <div className='content'  >
-                            <div className='ontitleclick' onClick={() => this.renderDetailPopup(post)}>
+                            <div className='ontitleclick'>
                                 <strong>{rendertitle}</strong>
                             </div>
                             <div className='description'>
