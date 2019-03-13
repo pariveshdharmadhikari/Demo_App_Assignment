@@ -101,8 +101,8 @@ class Dashboard extends React.Component {
                         {_this.renderbutton(post.author, post.id)}
                         <i className='large middle aligned icon user' />
                         <div className='content'  >
-                            <div className='header ontitleclick' onClick={() => this.renderDetailPopup(post)}>
-                                {rendertitle}
+                            <div className='ontitleclick' onClick={() => this.renderDetailPopup(post)}>
+                                <strong>{rendertitle}</strong>
                             </div>
                             <div className='description'>
                                 {this.trimByWord(description)}
