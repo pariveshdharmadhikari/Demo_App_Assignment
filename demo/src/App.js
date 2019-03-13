@@ -10,7 +10,9 @@ import EditPost from './component/EditPost';
 
 
 class App extends Component {
+
   render() {
+
     return (
       <div className="text container"  >        
           <Router history={history}>

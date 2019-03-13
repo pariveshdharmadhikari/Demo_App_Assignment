@@ -12,6 +12,7 @@ import promise from 'redux-promise';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(Reducers, composeEnhancers(applyMiddleware(reduxThunk, promise)));
 
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

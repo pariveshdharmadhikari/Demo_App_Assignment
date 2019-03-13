@@ -69,7 +69,6 @@ class EditPost extends React.Component {
 
     //main render method.
     render() {
-        console.log(localStorage.getItem('IsLogedIn'),'kdhsgfksfhgs')
         if (localStorage.getItem('IsLogedIn')=== 'true') {
             if (this.state.post !== '') {
                 return (

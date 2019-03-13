@@ -56,11 +56,10 @@ class Login extends React.Component {
 
     //Main render method.
     render() {
-        console.log(localStorage.getItem("IsLogedIn"))
         if (localStorage.getItem("IsLogedIn") === 'false') {
             return (
                 <div>
-                    <Header propName='Signup'/>
+                    <Header propName='Signup' />
                     <h2 style={{ textAlign: 'center' }}>Login</h2>
                     <form className="ui form error formmargin " onSubmit={this.props.handleSubmit(this.onSubmit)}>
                         <Field name="username" component={this.renderInput} label="Username" maxLength='20' />
