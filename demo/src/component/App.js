@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {Router,Route,Switch} from 'react-router-dom';
-import Login from './component/Login';
-import Signup from './component/Signup';
+import Login from './Login';
+import Signup from './Signup';
 import history from './History'
-import Dashboard from './component/Dashboard'
-import CreatePost from './component/CreatePost';
-import EditProfile from './component/EditProfile';
-import EditPost from './component/EditPost';
+import Dashboard from './Dashboard'
+import CreatePost from './CreatePost';
+import EditProfile from './EditProfile';
+import EditPost from './EditPost';
 
 
 class App extends Component {

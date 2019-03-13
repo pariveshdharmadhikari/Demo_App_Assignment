@@ -4,7 +4,7 @@ import { updatePost, fetchPost } from '../action';
 import { connect } from 'react-redux';
 import _ from 'lodash'
 import { toastr } from 'react-redux-toastr';
-import history from '../History';
+import history from './History';
 import '../css/Loader.css';
 import Header from './Header';
 

@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login, fetchPosts } from '../action'
-import history from '../History'
+import history from './History'
 import { toastr } from 'react-redux-toastr';
 import Header from './Header';
 class Login extends React.Component {

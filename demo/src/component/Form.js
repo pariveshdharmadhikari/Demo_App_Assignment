@@ -17,7 +17,7 @@ class Form extends React.Component {
     }
 
     //renderInput method returns the JSX for every Field Component.
-    renderInput = ({ input, type,label, meta ,maxLength}) => {
+    renderInput = ({ input, type, label, meta, maxLength }) => {
         return (
             <div className='field'>
                 <label>{label}</label>
@@ -29,19 +29,21 @@ class Form extends React.Component {
 
     //onSubmit method invoke the callback onSubmit function.
     onSubmit = (formValues) => {
-        const _this=this;
-        this.props.onSubmit(formValues,()=>{
+        const _this = this;
+        this.props.onSubmit(formValues, () => {
             _this.refs.btn.setAttribute("disabled", "disabled");
         })
-            
+
     }
+
+   
 
     //main render method.
     render() {
         return (
             <form className="ui form error formmargin " onSubmit={this.props.handleSubmit(this.onSubmit)}>
                 <Field name="first_name" type="text" component={this.renderInput} label="First Name" />
-                <Field name="last_name" type="text" component={this.renderInput} label="Last Name"/>
+                <Field name="last_name" type="text" component={this.renderInput} label="Last Name" />
                 <Field name="email" type="text" component={this.renderInput} label="E-mail" />
                 <Field name="username" type="text" component={this.renderInput} label="UserName" />
                 <Field name="password" type="password" component={this.renderInput} label="Password" />
@@ -55,41 +57,41 @@ class Form extends React.Component {
 //validate method performs validation task on form.
 const validate = (formValues) => {
     const errors = {}
-    
+
     if (!formValues.first_name) {
         errors.first_name = 'you must Enter Title'
-    }else if (formValues.first_name.length >30 ) {
+    } else if (formValues.first_name.length > 30) {
         errors.first_name = 'length must be less than 30'
     }
 
     if (!formValues.last_name) {
         errors.last_name = 'you must Enter Description'
-    }else if (formValues.last_name.length >30 ) {
+    } else if (formValues.last_name.length > 30) {
         errors.last_name = 'length must be less than 30'
     }
 
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,3}$/i.test(formValues.email)) {
         errors.email = 'Enter Valid Email'
-    }else if (formValues.email.length >50 ) {
+    } else if (formValues.email.length > 50) {
         errors.email = 'length must be less than 50'
     }
 
-    if(!formValues.username){
+    if (!formValues.username) {
         errors.username = 'You must enter username'
-    }else if (!/[^a-zA-Z0-9]/i.test(formValues.username)) {
-        errors.username = 'Only Alfanumeric value will aceepted (with one special character)'
-    }else if(formValues.username.length<6){
+    } else if (formValues.username.length < 6) {
         errors.username = 'Minimum length is 6 character'
-    }else if(formValues.username.length>20){
+    } else if (formValues.username.length > 20) {
         errors.username = 'Maximum length is 20 character'
     }
 
     if (!formValues.password) {
         errors.password = 'you must Enter Password'
-    }else if(formValues.password.length<6){
+    } else if (formValues.password.length < 6) {
         errors.password = 'Minimum length is 6 character'
-    }else if (formValues.password.length >20 ) {
+    } else if (formValues.password.length > 20) {
         errors.password = 'length must be less than 20'
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})/i.test(formValues.password)) {
+        errors.password = 'password must be Strong'
     }
 
     if (!formValues.ConfirmPassword) {

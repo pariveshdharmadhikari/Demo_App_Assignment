@@ -3,7 +3,7 @@ import PostForm from './PostForm';
 import { createPost } from '../action';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import history from '../History';
+import history from './History';
 import { toastr } from 'react-redux-toastr';
 import Header from './Header';
 

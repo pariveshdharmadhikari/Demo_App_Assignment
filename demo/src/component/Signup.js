@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import Form from './Form'
 import Header from './Header';
 import { toastr } from 'react-redux-toastr';
-import history from '../History';
+import history from './History';
 
 class SignupForm extends React.Component {
     
