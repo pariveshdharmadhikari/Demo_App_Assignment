@@ -8,6 +8,7 @@ import '../css/Loader.css';
 import DetailsPopup from './DetailsPopup';
 import DeletePopup from './DeletePopup';
 import Header from './Header'
+import '../css/Form.css'
 
 class Dashboard extends React.Component {
     state = {
@@ -95,7 +96,7 @@ class Dashboard extends React.Component {
                 const rendertitle=_this.filterTitle(post.title.rendered);
                 const description = _this.strip_html_tags(post.excerpt.rendered)
                 return (
-                    <div className='item' key={index}>
+                    <div className='item formmargin' key={index}>
                         {_this.renderbutton(post.author, post.id)}
                         <i className='large middle aligned icon user' />
                         <div className='content'  >
