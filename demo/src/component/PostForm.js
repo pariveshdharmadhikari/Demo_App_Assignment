@@ -6,22 +6,22 @@ import '../css/Form.css'
 class CreatePost extends React.Component {
 
     //Textarea for every Field
-    renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
+    renderField = ({ input, placeholder,label, type, meta: { touched, error, warning } }) => (
         <div>
             <label>{label}</label>
             <div>
-                <textarea {...input} placeholder={label} type={type} />
+                <textarea {...input} placeholder={placeholder} type={type} />
                 {touched && (error && <span className='errormessage' >{error}</span>)}
             </div>
         </div>
     )
 
     //Input for every field
-    renderInput = ({ input, label, type, maxLength, meta: { touched, error } }) => (
+    renderInput = ({ input, label, type, maxLength, placeholder, meta: { touched, error } }) => (
         <div>
             <label>{label}</label>
             <div>
-                <input {...input} placeholder={label} type={type} maxLength={maxLength} />
+                <input {...input} placeholder={placeholder} type={type} maxLength={maxLength} />
                 {touched && (error && <span className='errormessage' >{error}</span>)}
             </div>
         </div>
@@ -36,10 +36,12 @@ class CreatePost extends React.Component {
 
     status = ['publish', 'future', 'draft', 'pending', 'private']
     //render DropdownList.
-    renderDropdownList = ({ input, data, valueField, textField }) => {
+    renderDropdownList = ({ input, data, valueField, textField,label }) => {
         return (
-            <div>
+            <div>   
+                <label>{label}</label>
                 <DropdownList {...input}
+        
                     data={data}
                     valueField={valueField}
                     textField={textField}
@@ -63,10 +65,11 @@ class CreatePost extends React.Component {
                                 component={this.renderInput}
                                 label="Title"
                                 maxLength="15"
+                                placeholder="Enter title"
                             />
                         </div>
                         <div className='field'>
-                            <Field name="content" component={this.renderField} label="Description" />
+                            <Field name="content" component={this.renderField} label="Description" placeholder='Enter Description within 200 characters' />
                         </div>
 
                         <div className='field'>
@@ -75,7 +78,9 @@ class CreatePost extends React.Component {
                                 component={this.renderDropdownList}
                                 data={this.status}
                                 valueField="value"
-                                textField="type" />
+                                textField="type" 
+                                label="Status"
+                                />
                         </div>
                         <div className='field'>
                             <button className='ui secondary button' type="button" disabled={this.props.pristine || this.props.submitting} onClick={this.props.reset}>
@@ -96,12 +101,12 @@ class CreatePost extends React.Component {
 const validate = values => {
     const errors = {}
     if (!values.title) {
-        errors.title = 'Required'
+        errors.title = 'Title is required'
     } else if (values.title.length > 15) {
         errors.title = 'Must be 15 characters or less'
     }
     if (!values.content) {
-        errors.content = 'Required'
+        errors.content = 'Description is required'
     } else if (values.content.length > 200) {
         errors.content = "must be 200 characters or less";
     }

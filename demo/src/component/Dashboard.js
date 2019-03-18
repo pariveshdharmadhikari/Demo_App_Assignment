@@ -12,21 +12,54 @@ import '../css/Form.css'
 
 
 class Dashboard extends React.Component {
+
     state = {
         data: undefined,
         popupState: false,
         postid: '',
         detailPopupState: false,
-        selectedpost: {}
+        selectedpost: {},
+        totalPages: 0,
+        pagenumber: 1
     }
 
     //used to initiate the dashboard with our POST lists
     //It uses fetchPosts Action Creator.
     componentWillMount() {
         if (localStorage.getItem('IsLogedIn') === 'true') {
-            this.props.fetchPosts((res) => {
+            this.props.fetchPosts(this.state.pagenumber, (res) => {
                 if (res.status === 200) {
-                    this.setState({ data: res.data })
+                    this.setState({ totalPages: parseInt(res.headers['x-wp-totalpages']) })
+                }
+                else {
+                    toastr.error("Something went wrong");
+                }
+            });
+
+        }
+    }
+
+    pagination(identifier) {
+        if (identifier === 'Next') {
+            const nextpage = this.state.pagenumber + 1;
+            this.setState({ pagenumber: nextpage });
+            this.props.fetchPosts(nextpage, (res) => {
+                if (res.status === 200) {
+                    this.setState({ totalPages: parseInt(res.headers['x-wp-totalpages']) })
+                }
+                else {
+                    toastr.error("Something went wrong");
+                }
+            });
+        }
+        if (identifier === 'Previous') {
+            console.log(this.state.pagenumber, 'previous');
+            const previouspage = this.state.pagenumber - 1;
+            this.setState({ pagenumber: previouspage });
+            console.log(this.state.pagenumber, 'pagination');
+            this.props.fetchPosts(previouspage, (res) => {
+                if (res.status === 200) {
+                    this.setState({ totalPages: parseInt(res.headers['x-wp-totalpages']) })
                 }
                 else {
                     toastr.error("Something went wrong");
@@ -34,6 +67,7 @@ class Dashboard extends React.Component {
             });
         }
     }
+
 
     //This method taked a paragraph as a argument.
     //Return string with removing html tags. 
@@ -56,8 +90,8 @@ class Dashboard extends React.Component {
         return result;
     }
 
-    filterTitle(sentence){
-        var result = sentence.substr(0,15);
+    filterTitle(sentence) {
+        var result = sentence.substr(0, 15);
         return result;
     }
 
@@ -91,16 +125,17 @@ class Dashboard extends React.Component {
 
     //It show the list of all posts .
     renderlist = () => {
+
         if (this.props.posts !== []) {
             const _this = this;
             return this.props.posts.map((post, index) => {
-                const rendertitle=_this.filterTitle(post.title.rendered);
+                const rendertitle = _this.filterTitle(post.title.rendered);
                 const description = _this.strip_html_tags(post.excerpt.rendered)
                 return (
-                    <div className='item formmargin' onClick={() => this.renderDetailPopup(post)} key={index}>
+                    <div className='item formmargin' key={index}>
                         {_this.renderbutton(post.author, post.id)}
                         <i className='large middle aligned icon user' />
-                        <div className='content'  >
+                        <div className='content' onClick={() => this.renderDetailPopup(post)} >
                             <div className='ontitleclick'>
                                 <strong>{rendertitle}</strong>
                             </div>
@@ -116,7 +151,7 @@ class Dashboard extends React.Component {
         else {
             return (
                 <div>
-                    <h2 style={{ textAlign: 'center' }}>Loading...</h2>
+                    <div className="loader"></div>
                 </div>
             );
         }
@@ -126,18 +161,48 @@ class Dashboard extends React.Component {
     renderDashBoard() {
         const name = localStorage.getItem("Username")
         const temp = (name.charAt(0)).toUpperCase();
+        const { pagenumber, totalPages } = this.state;
+
         if (localStorage.getItem("IsLogedIn") === 'true') {
-            return (
-                <div>
-                    <Header propName='Dashboard' temp={temp} />
+            if (this.props.posts !== []) {
+                return (
                     <div>
-                        <h2 style={{ textAlign: 'center' }}>POST LIST</h2>
-                        <div className='ui celled list' >
-                            {this.renderlist()}
+                        <Header propName='Dashboard' temp={temp} />
+                        <div>
+                            <h2 style={{ textAlign: 'center' }}>POST LIST</h2>
+
+                            <div className='ui celled list' >
+                                {this.renderlist()}
+                            </div>
+                            <div className='item formmargin'>
+                                <div style={{ textAlign: 'center' }} >
+                                    <label >Page No - {this.state.pagenumber}</label>
+                                </div>
+
+                                <div>
+                                    <div style={{ float: 'left' }}>
+                                        {pagenumber !== 1 && <button className="ui button" onClick={() => this.pagination('Previous')}>Previous </button>}
+
+                                    </div >
+
+
+                                    <div style={{ float: 'right' }}>
+                                        {!(pagenumber === totalPages) && <button className="ui button" onClick={() => this.pagination('Next')}>Next</button>}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            );
+                );
+            }
+            else {
+                return (
+                    <div>
+                        <div className="loader"></div>
+                    </div>
+                );
+
+            }
         }
         else {
             return (
@@ -172,6 +237,8 @@ class Dashboard extends React.Component {
                 />}
 
                 {this.renderDashBoard()}
+
+
             </div>
         );
     }

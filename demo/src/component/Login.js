@@ -23,13 +23,13 @@ class Login extends React.Component {
     }
 
     //renderInput method returns the JSX for every Field Component.
-    renderInput = ({ input, label, type, meta, maxLength }) => {
+    renderInput = ({ input, label, type, meta, maxLength ,placeholder}) => {
         return (
 
             <div className='field'>
                 <div>
                     <label>{label}</label>
-                    <input {...input} type={type} maxLength={maxLength} />
+                    <input {...input} type={type} maxLength={maxLength} placeholder={placeholder} />
                 </div>
                 {this.renderError(meta)}
             </div>
@@ -62,10 +62,23 @@ class Login extends React.Component {
                     <Header propName='Signup' />
                     <h2 style={{ textAlign: 'center' }}>Login</h2>
                     <form className="ui form error formmargin " onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                        <Field name="username" component={this.renderInput} label="Username" maxLength='20' />
-                        <Field name="password" type='password' component={this.renderInput} label="Password" maxLength='20' />
+                        <Field
+                            name="username"
+                            component={this.renderInput}
+                            label="Username"
+                            maxLength='20'
+                            placeholder='Enter username'
+                        />
+                        <Field
+                            name="password"
+                            type='password'
+                            component={this.renderInput}
+                            label="Password"
+                            maxLength='20'
+                            placeholder='Enter password'
+                        />
                         <button ref='btn' className="ui button primary " style={{ alignContent: 'right' }}>Login</button>
-                        <Link to='/Signup'><button className="ui button">Create Account</button></Link>
+                        <Link to='/Signup'><button className="ui button">Create account</button></Link>
                     </form>
                 </div>
             );
@@ -84,10 +97,10 @@ class Login extends React.Component {
 const validate = (formValues) => {
     const errors = {}
     if (!formValues.username) {
-        errors.username = 'you must Enter UserName'
+        errors.username = 'Username is required'
     }
     if (!formValues.password) {
-        errors.password = 'you must Enter Password'
+        errors.password = 'Password is required'
     }
     return errors;
 }

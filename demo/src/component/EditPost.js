@@ -86,6 +86,7 @@ class EditPost extends React.Component {
         else {
             return (
                 <div>
+                    <Header propName='Login'/>
                     <h2 style={{ textAlign: 'center' }}>Must Login First</h2>
                 </div>
             );

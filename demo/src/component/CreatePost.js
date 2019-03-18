@@ -2,7 +2,6 @@ import React from 'react'
 import PostForm from './PostForm';
 import { createPost } from '../action';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import history from './History';
 import { toastr } from 'react-redux-toastr';
 import Header from './Header';
@@ -38,11 +37,7 @@ class CreatePost extends React.Component {
         else {
             return (
                 <div>
-                    <div className=" ui secondary pointing menu" >
-                        <div className="right menu" >
-                            <Link to="/" className="item" >Login</Link>
-                        </div>
-                    </div>
+                    <Header propName='Login'/>
                     <h2 style={{ textAlign: 'center' }}>Please Login First</h2>
                 </div>
             );

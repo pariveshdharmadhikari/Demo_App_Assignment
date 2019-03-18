@@ -54,9 +54,10 @@ export const createPost = (formvalues, callBackResponse) => () => {
 
 //action creator to fetch all post list.
 //Authorization is checked by TOKEN.
-export const fetchPosts = (callBackResponse) => (dispatch) => {
+export const fetchPosts = (id,callBackResponse) => (dispatch) => {
+    console.log(id,'actioncreator');
     headers['Authorization']=`Bearer ${localStorage.getItem("token")}`;
-    const response = API.get('/wp/v2/posts', { headers: headers });
+    const response = API.get(`/wp/v2/posts/?page=${id}`, { headers: headers });
     response.then((res) => {
         callBackResponse(res);
         dispatch({
